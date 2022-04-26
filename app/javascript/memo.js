@@ -1,20 +1,47 @@
+//正しくレスポンスされたらこの描写を返す
+
+const buildHTML = (XHR) => {
+  const item = XHR.response.post;
+  const html = `
+    <div class="post">
+      <div class="post-date">
+        投稿日時：${item.created_at}
+      </div>
+      <div class="post-content">
+        ${item.content}
+      </div>
+    </div>`;
+  return html;
+};
+
 function post (){
-  //htmlの情報を受け取る
-  const submit = document.getElementById("submit")
-  
-  //クリックした時のイベント
+  const submit = document.getElementById("submit");
+  //クリックされたら以下をする
   submit.addEventListener("click", (e) => {
-   //ブラウザのクリックイベントを初期化
-   e.preventDefault();
-   //フォームの情報を取得
-    const form = document.getElementById("form")
+    //ブラウザの初期化
+    e.preventDefault();
+
+    const form = document.getElementById("form");
     const formData = new FormData(form);
-   //非同期通信の設定
-   const XHR = new XMLHttpRequest();
-   XHR.open("POST", "/posts", true);
-   XHR.responseType = "json";
-   XHR.send(formData);
+    //非同期通信の作成
+    const XHR = new XMLHttpRequest();
+    XHR.open("POST", "/posts", true);
+    XHR.responseType = "json";
+    XHR.send(formData);
+    //レスポンスによって返す値を決める
+    XHR.onload = () => {
+      if(XHR.status != 200){
+        alert(`Error ${XHR.status}: ${XHR.statusText}`);
+        return null;
+      }
+      const list = document.getElementById("list");
+      const formText = document.getElementById("content");
+      
+      list.insertAdjacentHTML("afterend", buildHTML(XHR));
+      formText.value = "";
+    };
   });
 };
 
+//ロードされたらpost関数をする
 window.addEventListener('load', post);
