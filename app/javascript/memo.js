@@ -1,7 +1,7 @@
 //正しくレスポンスされたらこの描写を返す
 
 const buildHTML = (XHR) => {
-  const item = XHR.response.post;
+  const item = XHR.response.post;  //createアクションで保存したデータを取得している
   const html = `
     <div class="post">
       <div class="post-date">
@@ -23,9 +23,10 @@ function post (){
 
     const form = document.getElementById("form");
     const formData = new FormData(form);
+    
     //非同期通信の作成
-    const XHR = new XMLHttpRequest();
-    XHR.open("POST", "/posts", true);
+    const XHR = new XMLHttpRequest();  //これがコントローラーと結びついてるから他のアクションを動かせる
+    XHR.open("POST", "/posts", true);  //この先でフォームを保存するのでcreateアクションに繋がっている
     XHR.responseType = "json";
     XHR.send(formData);
     //レスポンスによって返す値を決める
